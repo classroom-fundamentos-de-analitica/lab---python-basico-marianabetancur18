@@ -11,6 +11,13 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+import csv
+from collections import Counter
+from datetime import datetime
+from operator import index
+
+
+csvfile= open("data.csv","r")
 
 
 def pregunta_01():
@@ -21,7 +28,11 @@ def pregunta_01():
     214
 
     """
-    return
+    result = 0
+    for row in csv.reader(csvfile, delimiter='\t'):
+        result += int(row[1])
+
+    return result
 
 
 def pregunta_02():
@@ -39,7 +50,13 @@ def pregunta_02():
     ]
 
     """
-    return
+    result=Counter()
+    for row in csv.reader(csvfile, delimiter='\t'):
+        result[row[0]]+=1
+
+    result=sorted(result.items())
+
+    return result
 
 
 def pregunta_03():
@@ -57,7 +74,12 @@ def pregunta_03():
     ]
 
     """
-    return
+    result=Counter()
+    for row in csv.reader(csvfile, delimiter='\t'):
+        result[row[0]]+=int(row[1])
+
+    result=sorted(result.items())
+    return result
 
 
 def pregunta_04():
@@ -82,7 +104,15 @@ def pregunta_04():
     ]
 
     """
-    return
+    result=Counter()
+    for row in csv.reader(csvfile, delimiter='\t'):
+        date= datetime.strptime(row[2],"%Y-%m-%S")
+
+        result[str(date.month).zfill(2)]+=1
+
+    result=sorted(result.items())
+
+    return result
 
 
 def pregunta_05():
@@ -100,7 +130,23 @@ def pregunta_05():
     ]
 
     """
-    return
+    with open('data.csv') as file:
+
+        data = file.readlines()
+        data = [(x.strip().split('\t')[0:2]) for x in data]
+
+        list_ = sorted((list(set([x[0] for x in data]))))
+        result = list()
+
+        for i in list_:
+            valores = list()
+            for j in data:
+                if j[0] == i:
+                    valores.append(int(j[1]))
+
+            result.append((i, max(valores), min(valores)))
+
+    return result
 
 
 def pregunta_06():
@@ -125,7 +171,25 @@ def pregunta_06():
     ]
 
     """
-    return
+    with open('data.csv') as file:
+
+        data = file.readlines()
+        data = [x.strip().split('\t')[-1] for x in data]
+        data = ','.join(data).split(',')
+        data = [x.split(':') for x in data]
+
+        strings = sorted(list(set([x[0] for x in data])))
+        result = list()
+
+        for i in strings:
+            valores = list()
+            for j in data:
+                if j[0] == i:
+                    valores.append(int(j[1]))
+
+            result.append((i, min(valores), max(valores)))
+
+    return result
 
 
 def pregunta_07():
@@ -149,7 +213,22 @@ def pregunta_07():
     ]
 
     """
-    return
+    with open('data.csv') as file:
+
+        data = file.readlines()
+        data = [x.strip().split('\t')[0:2] for x in data]
+
+        indx = sorted(list(set([int(x[1]) for x in data])))
+        result = list()
+
+        for i in indx:
+            list_ = list()
+            for j in data:
+                if int(j[1]) == i:
+                    list_.append(j[0])
+            result.append((int(i), list_))
+
+    return result
 
 
 def pregunta_08():
@@ -174,7 +253,24 @@ def pregunta_08():
     ]
 
     """
-    return
+    with open('data.csv') as file:
+
+        data = file.readlines()
+        data = [x.strip().split('\t')[0:2] for x in data]
+
+        numbers = sorted(list(set([int(x[1]) for x in data])))
+        result = list()
+
+        for i in numbers:
+            list_ = list()
+
+            for j in data:
+                if int(j[1]) == i:
+                    list_.append(j[0])
+
+            result.append((int(i), sorted(list(set(list_)))))
+
+    return result
 
 
 def pregunta_09():
@@ -197,7 +293,19 @@ def pregunta_09():
     }
 
     """
-    return
+    with open('data.csv') as file:
+        data = file.readlines()
+        data = [x.strip().split('\t')[-1] for x in data]
+        data = ','.join(data).split(',')
+        data = [x.split(':')[0] for x in data]
+
+        strings = sorted(list(set(data)))
+        result = dict()
+
+        for i in strings:
+            result[i] = data.count(i)
+
+    return result
 
 
 def pregunta_10():
@@ -218,7 +326,19 @@ def pregunta_10():
 
 
     """
-    return
+    with open('data.csv') as file:
+        data = file.readlines()
+        data = [x.strip().split('\t') for x in data]
+
+        for i in data:
+            i.pop(1)
+            i.pop(1)
+            i[1] = len(i[1].split(','))
+            i[2] = len(i[2].split(','))
+
+        result = [tuple(x) for x in data]
+
+    return result
 
 
 def pregunta_11():
@@ -239,7 +359,25 @@ def pregunta_11():
 
 
     """
-    return
+    with open('data.csv') as file:
+
+        data = file.readlines()
+        aux = data.copy()
+        data = [x.strip().split('\t')[3] for x in data]
+        data = ','.join(data).split(',')
+
+        list_ = sorted(list(set(data)))
+        aux = [x.strip().split('\t') for x in aux]
+        result = dict()
+
+        for i in list_:
+            container = 0
+            for j in aux:
+                if i in j[3]:
+                    container += int(j[1])
+            result[i] = container
+
+    return result
 
 
 def pregunta_12():
@@ -257,4 +395,37 @@ def pregunta_12():
     }
 
     """
-    return
+    with open('data.csv') as file:
+
+        data = file.readlines()
+        data = [x.strip().split('\t') for x in data]
+
+        list_aux = list()
+
+        for i in data:
+            for j in range(3):
+                i.pop(1)
+            i[1] = i[1].split(',')
+
+        values = [x[1] for x in data]
+
+        for j in values:
+            list_ = sum([int(x.split(':').pop(1)) for x in j])
+            list_aux.append(list_)
+
+        for k in range(len(data)):
+            data[k].append(list_aux[k])
+            data[k].pop(1)
+
+        l = [x[0] for x in data]
+        l = sorted(list(set(l)))
+        result = dict()
+
+        for i in l:
+            acum = 0
+            for j in data:
+                if j[0] == i:
+                    acum += j[1]
+            result[i] = acum
+
+    return result
